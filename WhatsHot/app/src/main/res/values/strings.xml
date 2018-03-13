@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WhatsHot</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_list_view">List View</string>
+    <string name="title_map_view">Map View</string>
+</resources>
