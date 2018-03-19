@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+// TODO: Kenda, Hamed
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
@@ -16,14 +18,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_list:
-                    mTextMessage.setText(R.string.title_list_view);
-                    return true;
-                case R.id.navigation_map:
-                    mTextMessage.setText(R.string.title_map_view);
-                    return true;
-            }
             return false;
         }
     };
@@ -33,9 +27,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
 }
