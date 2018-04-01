@@ -1,12 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.android.whatshot.DetailActivity">
 
 
     <!-- TODO: Yany, Kerry -->
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:id="@+id/location_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/location_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Empire State"
+        />
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="April 1,2018"
+        />
+  <TextView
+      android:id="@+id/popularity"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      tools:text="hot"
+      />
+    <RatingBar
+        android:id="@+id/ratings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="4"
+        android:stepSize="1.0"
+        android:rating="3.0"
+        />
+    <TextView
+        android:id="@+id/popularTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="4:30PM-8:30PM"
+        />
+
+</LinearLayout>
