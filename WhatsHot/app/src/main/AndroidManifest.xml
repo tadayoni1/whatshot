@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.android.whatshot">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -36,11 +37,6 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings">
         </activity>
-
-        <provider
-            android:authorities="com.example.android.whatshot"
-            android:name=".data.PopularTimesProvider"
-            android:exported="false"/>
 
 
     </application>
