@@ -10,6 +10,12 @@
 
     <!-- Strings related to Settings -->
 
+    <!-- What's hot settings -->
+    <string name="pref_radius_list_title">Search Radius</string>
+    <string name="pref_radius_list_key" translatable="false">pref-radius</string>
+
+
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
