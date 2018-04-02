@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
          * methods for checking errors, but we wanted to keep this particular example simple.
          */
         if (null != data) {
-            mShowJson.setText(data.toString());
+//            mShowJson.setText(data.toString());
             Log.d(getClass().toString(), "PPPP onLoadFinished data: " + data.toString());
         }
     }
