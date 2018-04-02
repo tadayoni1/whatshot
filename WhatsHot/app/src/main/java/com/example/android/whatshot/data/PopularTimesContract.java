@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
  */
 
 
+
 public class PopularTimesContract {
 
     public static final String CONTENT_AUTHORITY = "com.example.android.whatshot";
