@@ -1,5 +1,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 <!-- TODO: Brian -->
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/pref_example_list_values"
+        android:entryValues="@array/list_preference_entries"
+    android:key="@string/pref_radius_list_key"
+    android:title="@string/pref_radius_list_title" />
 
 </PreferenceScreen>

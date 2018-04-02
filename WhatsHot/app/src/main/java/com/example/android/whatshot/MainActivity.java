@@ -1,19 +1,33 @@
 package com.example.android.whatshot;
 
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import com.example.android.whatshot.utilities.NetworkUtils;
 import com.example.android.whatshot.utilities.WhatsHotJsonUtils;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 
@@ -23,13 +37,18 @@ import java.net.URL;
 
 // TODO: Kenda, Hamed
 
-public class MainActivity extends AppCompatActivity implements android.support.v4.app.LoaderManager.LoaderCallbacks<JSONArray> {
+public class MainActivity extends AppCompatActivity implements android.support.v4.app.LoaderManager.LoaderCallbacks<JSONArray>, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private TextView mShowJson;
 
     public static final int POPULARTIMES_SEARCH_LOADER_ID = 22;
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
+
+    private GoogleApiClient mClient;
+    private Geofencing mGeofencing;
+    private Location location;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -51,6 +70,24 @@ public class MainActivity extends AppCompatActivity implements android.support.v
          */
         getSupportLoaderManager().initLoader(POPULARTIMES_SEARCH_LOADER_ID, null, this);
         makeGithubSearchQuery();
+
+        mClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(this, this)
+                .build();
+
+
+        if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                location = LocationServices.FusedLocationApi.getLastLocation(mClient);
+        } else {
+            Toast.makeText(getApplicationContext(), "Your location is required for app to function", Toast.LENGTH_LONG).show();
+        }
+
+        mGeofencing = new Geofencing(this, mClient, location);
     }
 
     @Override
@@ -116,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
          * methods for checking errors, but we wanted to keep this particular example simple.
          */
         if (null != data) {
-            mShowJson.setText(data.toString());
+//            mShowJson.setText(data.toString());
             Log.d(getClass().toString(), "PPPP onLoadFinished data: " + data.toString());
         }
     }
@@ -126,6 +163,36 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
     }
 
+    /**
+     * This is where we inflate and set up the menu for this Activity.
+     *
+     * @param menu The options menu in which you place your items.
+     *
+     * @return You must return true for the menu to be displayed;
+     *         if you return false it will not be shown.
+     *
+     * @see #onPrepareOptionsMenu
+     * @see #onOptionsItemSelected
+     */
+    public boolean onCreateOptionsMenu(Menu menu) {
+        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
+        MenuInflater inflater = getMenuInflater();
+        /* Use the inflater's inflate method to inflate our menu layout to this menu */
+        inflater.inflate(R.menu.main, menu);
+        /* Return true so that the menu is displayed in the Toolbar */
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private void makeGithubSearchQuery() {
         URL populartimesSearchUrl = NetworkUtils.buildUrl("");
@@ -140,5 +207,22 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         } else {
             loaderManager.restartLoader(POPULARTIMES_SEARCH_LOADER_ID, queryBundle, this);
         }
+    }
+
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
