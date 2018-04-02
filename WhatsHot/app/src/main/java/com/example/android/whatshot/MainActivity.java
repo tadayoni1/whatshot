@@ -13,9 +13,13 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.example.android.whatshot.utilities.NetworkUtils;
 import com.example.android.whatshot.utilities.WhatsHotJsonUtils;
@@ -149,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
          * methods for checking errors, but we wanted to keep this particular example simple.
          */
         if (null != data) {
-            mShowJson.setText(data.toString());
+//            mShowJson.setText(data.toString());
             Log.d(getClass().toString(), "PPPP onLoadFinished data: " + data.toString());
         }
     }
@@ -159,6 +163,36 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
     }
 
+    /**
+     * This is where we inflate and set up the menu for this Activity.
+     *
+     * @param menu The options menu in which you place your items.
+     *
+     * @return You must return true for the menu to be displayed;
+     *         if you return false it will not be shown.
+     *
+     * @see #onPrepareOptionsMenu
+     * @see #onOptionsItemSelected
+     */
+    public boolean onCreateOptionsMenu(Menu menu) {
+        /* Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater */
+        MenuInflater inflater = getMenuInflater();
+        /* Use the inflater's inflate method to inflate our menu layout to this menu */
+        inflater.inflate(R.menu.main, menu);
+        /* Return true so that the menu is displayed in the Toolbar */
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private void makeGithubSearchQuery() {
         URL populartimesSearchUrl = NetworkUtils.buildUrl("");
