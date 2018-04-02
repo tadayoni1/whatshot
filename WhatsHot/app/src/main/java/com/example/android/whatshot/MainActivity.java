@@ -44,9 +44,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mShowJson = (TextView) findViewById(R.id.textView_show_json);
-
+        
 
         /*
          * Initialize the loader
