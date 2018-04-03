@@ -1,15 +1,11 @@
-package com.example.android.whatshot;
+package com.example.android.whatshot.utilities;
 
 
-import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.service.carrier.CarrierMessagingService;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -18,12 +14,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by hammedopejin on 4/1/18.
@@ -49,7 +39,7 @@ public class Geofencing implements ResultCallback<Status> {
     }
 
 
-    public void updateGeofencesList(){
+    public void updateGeofence(){
 
         if (mLocation == null) return;
 

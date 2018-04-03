@@ -21,13 +21,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.android.whatshot.utilities.Geofencing;
 import com.example.android.whatshot.utilities.NetworkUtils;
 import com.example.android.whatshot.utilities.WhatsHotJsonUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     private TextView mShowJson;
 
     public static final int POPULARTIMES_SEARCH_LOADER_ID = 22;
+    private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
 
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
 
@@ -71,23 +71,37 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         getSupportLoaderManager().initLoader(POPULARTIMES_SEARCH_LOADER_ID, null, this);
         makeGithubSearchQuery();
 
+        if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getApplicationContext(), "Your location is required for app to function", Toast.LENGTH_LONG).show();
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_FINE_LOCATION);
+        } else {
+            location = LocationServices.FusedLocationApi.getLastLocation(mClient);
+        }
+
         mClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
                 .enableAutoManage(this, this)
                 .build();
 
 
-        if (ActivityCompat.checkSelfPermission(MainActivity.this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                location = LocationServices.FusedLocationApi.getLastLocation(mClient);
-        } else {
-            Toast.makeText(getApplicationContext(), "Your location is required for app to function", Toast.LENGTH_LONG).show();
-        }
-
         mGeofencing = new Geofencing(this, mClient, location);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSIONS_REQUEST_FINE_LOCATION && (ActivityCompat.checkSelfPermission(MainActivity.this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            location = LocationServices.FusedLocationApi.getLastLocation(mClient);
+        }else {
+            Toast.makeText(getApplicationContext(), "Your location is required for app to function", Toast.LENGTH_LONG).show();
+            return;
+        }
     }
 
     @Override
