@@ -1,5 +1,7 @@
 package com.example.android.whatshot;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -26,6 +28,8 @@ import com.example.android.whatshot.utilities.NetworkUtils;
 import com.example.android.whatshot.utilities.WhatsHotJsonUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.LocationServices;
 
 import org.json.JSONArray;
@@ -39,6 +43,7 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity implements android.support.v4.app.LoaderManager.LoaderCallbacks<JSONArray>, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private TextView mShowJson;
 
     public static final int POPULARTIMES_SEARCH_LOADER_ID = 22;
@@ -49,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     private GoogleApiClient mClient;
     private Geofencing mGeofencing;
     private Location location;
+
+    private Boolean leftGeofence;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -90,6 +97,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
 
         mGeofencing = new Geofencing(this, mClient, location);
+        mGeofencing.updateGeofence();
+        mGeofencing.registerGeofence();
+        leftGeofence = false;
     }
 
     @Override
@@ -223,20 +233,76 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!mClient.isConnecting() || !mClient.isConnected()) {
+            mClient.connect();
+        }
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mClient.isConnecting() || mClient.isConnected()) {
+            mClient.disconnect();
+        }
+    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
+        if (leftGeofence){
+            //TODO: Refresh API call
+            mGeofencing.updateGeofence();
+            mGeofencing.registerGeofence();
+        }
+        Log.i(TAG, "API Client Connection Successful!");
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        mClient.connect();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.i(TAG, "API Client Connection Failed!");
+    }
 
+    public class GeofenceBroadcastReceiver extends BroadcastReceiver {
+
+        public final String TAG = GeofenceBroadcastReceiver.class.getSimpleName();
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Log.i(TAG, "onReceive called");
+
+
+            GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+
+            if (geofencingEvent.hasError()) {
+                Log.e(TAG, String.format("Error code : %d", geofencingEvent.getErrorCode()));
+                return;
+            }
+
+            // Get the transition type.
+            int geofenceTransition = geofencingEvent.getGeofenceTransition();
+            // Check which transition type has triggered this event
+            if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+                //TODO what to do when reentring geofence?
+            } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+                leftGeofence = true;
+                mGeofencing.unRegisterGeofence();
+            } else {
+                // Log the error.
+                Log.e(TAG, String.format("Unknown transition : %d", geofenceTransition));
+                // No need to do anything else
+                return;
+            }
+
+
+        }
     }
 }

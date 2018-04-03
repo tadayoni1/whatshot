@@ -8,6 +8,7 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.android.whatshot.MainActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -65,7 +66,7 @@ public class Geofencing implements ResultCallback<Status> {
             return mGeofencePendingIntent;
         }
 
-        Intent intent = new Intent(mContext, GeofenceBroadcastReceiver.class);
+        Intent intent = new Intent(mContext, MainActivity.GeofenceBroadcastReceiver.class);
         mGeofencePendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, PendingIntent.
                 FLAG_UPDATE_CURRENT);
 
