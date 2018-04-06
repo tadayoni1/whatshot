@@ -17,6 +17,7 @@ public class PopularTimesContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_VENUE = "venues";
+    public static final String PATH_VENUE_DETAILS = "venue_hours";
 
 
     public static final class VenueEntry implements BaseColumns {
@@ -45,13 +46,18 @@ public class PopularTimesContract {
 
         public static final String COLUMN_TYPES = "types";
 
-        public static Uri buildVenueUriDetail(String venue_id) {
+        public static Uri buildVenueUriWithDayAndHour(int day, int hour) {
             return CONTENT_URI.buildUpon()
-                    .appendPath(venue_id)
+                    .appendPath(Integer.toString(day))
+                    .appendPath(Integer.toString(hour))
                     .build();
         }
 
         public static final class VenueHoursEntry implements BaseColumns {
+            public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                    .appendPath(PATH_VENUE_DETAILS)
+                    .build();
+
             public static final String TABLE_NAME = "venue_hours";
             public static final String COLUMN_VENUE_ID = "venue_id";
             public static final String COLUMN_DAY = "day";

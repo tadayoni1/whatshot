@@ -45,6 +45,11 @@
 
         <receiver android:name=".utilities.GeofenceBroadcastReceiver"/>
 
+        <provider
+            android:authorities="com.example.android.whatshot"
+            android:name=".data.PopularTimesProvider"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

@@ -86,4 +86,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_detail">Details</string>
+    <string name="no_phone_number">Not Entered</string>
 </resources>

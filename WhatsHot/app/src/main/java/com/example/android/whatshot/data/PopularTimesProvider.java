@@ -9,9 +9,12 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.android.whatshot.data.PopularTimesContract.VenueEntry;
 import com.example.android.whatshot.data.PopularTimesContract.VenueEntry.VenueHoursEntry;
+
+import java.util.List;
 
 /**
  * Created by soheil on 4/1/18.
@@ -21,6 +24,7 @@ public class PopularTimesProvider extends ContentProvider {
 
     public static final int CODE_VENUES = 100;
     public static final int CODE_VENUE_DETAILS = 101;
+    public static final int CODE_VENUE_WITH_DAY_AND_HOUR = 102;
 
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -33,7 +37,9 @@ public class PopularTimesProvider extends ContentProvider {
 
         matcher.addURI(authority, PopularTimesContract.PATH_VENUE, CODE_VENUES);
 
-        matcher.addURI(authority, PopularTimesContract.PATH_VENUE + "/*", CODE_VENUE_DETAILS);
+        matcher.addURI(authority, PopularTimesContract.PATH_VENUE_DETAILS, CODE_VENUE_DETAILS);
+
+        matcher.addURI(authority, PopularTimesContract.PATH_VENUE + "/#/#", CODE_VENUE_WITH_DAY_AND_HOUR);
 
         return matcher;
 
@@ -56,10 +62,12 @@ public class PopularTimesProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
 
             case CODE_VENUES:
+                Log.d(getClass().toString(), "BulkInsert for " + CODE_VENUES);
                 db.beginTransaction();
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(PopularTimesContract.VenueEntry.TABLE_NAME, null, value);
+//                        Log.d(getClass().toString(), "BulkInsert _id=" + _id);
                         if (_id != -1) {
                             rowsInserted++;
                         }
@@ -76,10 +84,12 @@ public class PopularTimesProvider extends ContentProvider {
                 return rowsInserted;
 
             case CODE_VENUE_DETAILS:
+                Log.d(getClass().toString(), "BulkInsert for " + CODE_VENUE_DETAILS);
                 db.beginTransaction();
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(PopularTimesContract.VenueEntry.VenueHoursEntry.TABLE_NAME, null, value);
+//                        Log.d(getClass().toString(), "BulkInsert _id=" + _id);
                         if (_id != -1) {
                             rowsInserted++;
                         }
@@ -97,11 +107,9 @@ public class PopularTimesProvider extends ContentProvider {
 
 
             default:
-                return super.bulkInsert(uri, values);
+                throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
     }
-
-
 
 
     @Nullable
@@ -111,11 +119,17 @@ public class PopularTimesProvider extends ContentProvider {
         Cursor cursor;
 
         switch (sUriMatcher.match(uri)) {
-            case CODE_VENUE_DETAILS: {
-
+            case CODE_VENUES: {
+                Log.d(getClass().toString(), "query for CODE_VENUES");
                 String venue_id = uri.getLastPathSegment();
 
                 String[] selectionArguments = new String[]{venue_id};
+
+                SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+                qb.setTables(VenueEntry.TABLE_NAME + " JOIN " + VenueHoursEntry.TABLE_NAME +
+                        " ON " + VenueHoursEntry.TABLE_NAME + "." + VenueHoursEntry.COLUMN_VENUE_ID +
+                        " = " + VenueEntry.TABLE_NAME + "." + VenueEntry.COLUMN_VENUE_ID);
 
                 cursor = mOpenHelper.getReadableDatabase().query(
                         VenueEntry.TABLE_NAME,
@@ -129,22 +143,32 @@ public class PopularTimesProvider extends ContentProvider {
                 break;
             }
 
-            case CODE_VENUES: {
+            case CODE_VENUE_WITH_DAY_AND_HOUR: {
+                Log.d(getClass().toString(), "query for CODE_VENUE_WITH_DAY_AND_HOUR");
 
-                String hour = "23";
-                String day = "1";
+                List<String> pathSegment = uri.getPathSegments();
+                String day = pathSegment.get(1);
+                Log.d(getClass().toString(), "pathSegment day: " + day);
+                String hour = pathSegment.get(2);
+                Log.d(getClass().toString(), "pathSegment hour: " + hour);
                 String[] selectionArguments = new String[]{day, hour};
 
                 SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-
-                qb.setTables(VenueEntry.TABLE_NAME + " JOIN " + VenueHoursEntry.TABLE_NAME +
+                String tables = VenueEntry.TABLE_NAME + " INNER JOIN " + VenueHoursEntry.TABLE_NAME +
                         " ON " + VenueHoursEntry.TABLE_NAME + "." + VenueHoursEntry.COLUMN_VENUE_ID +
-                        " = " + VenueEntry.TABLE_NAME + "." + VenueEntry.COLUMN_VENUE_ID);
+                        " = " + VenueEntry.TABLE_NAME + "." + VenueEntry.COLUMN_VENUE_ID;
+                qb.setTables(tables);
 
+                Log.d(getClass().toString(), "query builder tables: " + tables);
+
+                String whereStatement = "";
+                whereStatement = VenueHoursEntry.COLUMN_DAY + " = '" + day + "'" + " AND " + VenueHoursEntry.COLUMN_HOUR + " = '" + hour + "'";;
+                qb.appendWhere(whereStatement);
+                Log.d(getClass().toString(), "query builder whereStatements: " + whereStatement);
                 cursor = qb.query(mOpenHelper.getReadableDatabase(),
                         projection,
-                        VenueHoursEntry.COLUMN_DAY + " = ? AND " + VenueHoursEntry.COLUMN_HOUR + " = ?",
-                        selectionArguments,
+                        null,
+                        null,
                         null,
                         null,
                         VenueHoursEntry.COLUMN_POPULARITY + " DESC"
@@ -174,9 +198,38 @@ public class PopularTimesProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
-    }
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        int numRowsDeleted;
+
+        if (null == selection) selection = "1";
+
+        switch (sUriMatcher.match(uri)) {
+
+            case CODE_VENUES:
+                numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
+                        VenueEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+
+                break;
+
+            case CODE_VENUE_DETAILS:
+                numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
+                        VenueEntry.VenueHoursEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        /* If we actually deleted any rows, notify that a change has occurred to this URI */
+        if (numRowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return numRowsDeleted;    }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {

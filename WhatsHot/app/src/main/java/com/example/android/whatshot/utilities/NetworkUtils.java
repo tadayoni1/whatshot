@@ -19,9 +19,9 @@ import java.util.Scanner;
 
 public final class NetworkUtils {
 
+
+    // TODO: Implement loading current data from API
     private final static String POPULARTIME_BASE_URL = "http://192.241.231.216/populartimes-api-test/api.php";
-
-
     public static URL buildUrl(String popularTimesSearchQuery) {
         Uri builtUri = Uri.parse(POPULARTIME_BASE_URL).buildUpon()
                 .build();

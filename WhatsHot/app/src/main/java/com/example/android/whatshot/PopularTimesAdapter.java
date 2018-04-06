@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.whatshot.data.PopularTimesContract;
+
 /**
  * Created by Pedram on 3/18/2018.
  */
@@ -18,6 +20,8 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
 
     // Class variable that holds  the Context
     private Context mContext;
+
+    private Cursor mCursor;
 
 
     /**
@@ -40,18 +44,22 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
 
     @Override
     public void onBindViewHolder(PopularTimesAdapterViewHolder holder, int position) {
+        mCursor.moveToPosition(position);
 
+        holder.establishmentNameView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_NAME)));
+        holder.rankView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.VenueHoursEntry.COLUMN_POPULARITY)));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (null == mCursor) return 0;
+        return mCursor.getCount();
     }
 
     class PopularTimesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView establishmentNameView;
-        TextView rankView;
+        final TextView establishmentNameView;
+        final TextView rankView;
 
         public PopularTimesAdapterViewHolder(View itemView) {
             super(itemView);
@@ -64,4 +72,10 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
 
         }
     }
+
+    public void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        notifyDataSetChanged();
+    }
+
 }
