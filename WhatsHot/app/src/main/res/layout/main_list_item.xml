@@ -4,28 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_item_selector">
 
     <!-- TODO: Kenda, Hamed -->
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white_smoke">
+        android:layout_height="match_parent">
+
+        <!-- ImageView that shows additional info, whether it be an icon
+            or a view of the establishment -->
+        <ImageView
+            android:id="@+id/establishment_image"
+            style="@style/itemListStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
+            app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal" />
 
         <!-- TextView that displays the name of the establishment -->
         <TextView
             android:id="@+id/establishment_name"
-            style="@style/Text_MostPopular"
-            android:layout_width="wrap_content"
+            style="@style/itemListStyle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/place_vertical_margin"
-            android:layout_marginLeft="@dimen/place_horizontal_margin"
-            android:layout_marginStart="@dimen/place_horizontal_margin"
-            android:layout_marginTop="@dimen/place_vertical_margin"
-            android:textColor="@android:color/primary_text_light"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="16dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rankTextView"
+            app:layout_constraintStart_toEndOf="@+id/establishment_image"
             app:layout_constraintTop_toTopOf="@+id/guideline"
+            app:layout_constraintVertical_bias="0.481"
             tools:text="Joe's Diner" />
 
         <!-- An empty view for spacing out the name and priority views -->
@@ -33,12 +50,10 @@
         <!-- A priority circle that is colored in programmatically in the adapter code -->
         <TextView
             android:id="@+id/rankTextView"
-            style="@style/TextAppearance.AppCompat.Small"
+            style="@style/itemListStyle"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/place_horizontal_margin"
-            android:layout_marginRight="@dimen/place_horizontal_margin"
             android:background="@drawable/circle_view"
             android:gravity="center"
             android:textAlignment="center"
@@ -54,6 +69,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.5" />
+
+
     </android.support.constraint.ConstraintLayout>
    <!-- <LinearLayout
         android:layout_width="match_parent"
