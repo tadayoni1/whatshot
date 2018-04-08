@@ -11,4 +11,14 @@
     </style>
 
 
+    <!-- handles common list styles for the main view -->
+    <style name="itemListStyle">
+        <item name="android:layout_marginBottom">@dimen/place_vertical_margin</item>
+        <item name="android:layout_marginLeft">@dimen/place_horizontal_margin</item>
+        <item name="android:layout_marginStart">@dimen/place_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/place_horizontal_margin</item>
+        <item name="android:layout_marginEnd">@dimen/place_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/place_vertical_margin</item>
+    </style>
+
 </resources>
