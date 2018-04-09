@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                     public Cursor loadInBackground() {
                         /* Extract the search query from the args using our constant */
                         // TODO: Implement to load data from API when data is not current
-                        boolean isDataCurrent = true;
+                        boolean isDataCurrent = false;
                         if (!isDataCurrent) {
                             readJsonFromApi(args);
                         }
