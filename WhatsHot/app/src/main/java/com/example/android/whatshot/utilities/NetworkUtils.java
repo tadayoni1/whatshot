@@ -3,7 +3,6 @@ package com.example.android.whatshot.utilities;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.android.whatshot.data.PlaceTypes;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -35,13 +34,13 @@ public final class NetworkUtils {
     private static final String PLACE_TYPE = "type";
 
 
-    public static URL buildUrl(String popularTimesSearchQuery, LatLng latLng1, LatLng latLng2, PlaceTypes.PlacesTypes placeType) {
+    public static URL buildUrl(String popularTimesSearchQuery, LatLng latLng1, LatLng latLng2, String placeType) {
         Uri builtUri = Uri.parse(POPULARTIME_BASE_URL).buildUpon()
                 .appendQueryParameter(LAT1, Double.toString(latLng1.latitude))
                 .appendQueryParameter(LNG1, Double.toString(latLng1.longitude))
                 .appendQueryParameter(LAT2, Double.toString(latLng2.latitude))
                 .appendQueryParameter(LNG2, Double.toString(latLng2.longitude))
-                .appendQueryParameter(PLACE_TYPE, placeType.toString())
+                .appendQueryParameter(PLACE_TYPE, placeType)
                 .build();
 
         Log.d("NetworkUtils-buildUrl", builtUri.toString() );
