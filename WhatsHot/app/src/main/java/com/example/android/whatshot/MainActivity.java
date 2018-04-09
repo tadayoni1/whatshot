@@ -29,9 +29,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.android.whatshot.data.PlaceTypes;
 import com.example.android.whatshot.data.PopularTimesContract;
 import com.example.android.whatshot.utilities.FakeDataUtils;
 import com.example.android.whatshot.utilities.Geofencing;
+import com.example.android.whatshot.utilities.LocationUtils;
 import com.example.android.whatshot.utilities.NetworkUtils;
 import com.example.android.whatshot.utilities.WhatsHotJsonUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -39,6 +41,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 
@@ -105,7 +108,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         /*
          * Initialize the loader
          */
-        makePopularTimesSearchQuery(0, 12);
+
+        LatLng[] latLngBoundary = LocationUtils.getRectangleBoundary(new LatLng(37.71520439197041,-122.48889838190705), 0.5 );
+
+        makePopularTimesSearchQuery(0, 12, latLngBoundary[0], latLngBoundary[1], PlaceTypes.PlacesTypes.bar );
 
         if (ActivityCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -194,8 +200,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         try {
             URL populartimesUrl = new URL(searchQueryUrlString);
             Log.d(getClass().toString(), "populartimesUrl in Loader: " + populartimesUrl);
-//                    String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
-            String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
+
+            String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
+
+            //String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
             Log.d(getClass().toString(), "populartimesSearchResults in Loader: " + populartimesSearchResults);
 //                    return WhatsHotJsonUtils.sortByDayAndHour(populartimesSearchResults, 0, 0);
             ContentValues[] contentValues = WhatsHotJsonUtils.getVenueContentValuesFromJsonString(populartimesSearchResults, this);
@@ -275,14 +283,21 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         }
     }
 
-    private void makePopularTimesSearchQuery(int day, int hour) {
-        URL populartimesSearchUrl = NetworkUtils.buildUrl("");
+    private void makePopularTimesSearchQuery(int day, int hour, LatLng latLng1, LatLng latLng2, PlaceTypes.PlacesTypes placeType) {
+
+        URL populartimesSearchUrl = NetworkUtils.buildUrl("", latLng1, latLng2, placeType);
 
         Log.d(getClass().toString(), "makePopularTimesSearchQuery() URL: " + populartimesSearchUrl.toString());
         Bundle queryBundle = new Bundle();
         queryBundle.putString(SEARCH_QUERY_URL_EXTRA, populartimesSearchUrl.toString());
         queryBundle.putInt(SEARCH_QUERY_URL_EXTRA_DAY, day);
         queryBundle.putInt(SEARCH_QUERY_URL_EXTRA_HOUR, hour);
+
+//        queryBundle.putDouble(SEARCH_QUERY_URL_EXTRA_LAT1, latLng1.latitude);
+//        queryBundle.putDouble(SEARCH_QUERY_URL_EXTRA_LNG1, latLng1.longitude);
+//        queryBundle.putDouble(SEARCH_QUERY_URL_EXTRA_LAT2, latLng2.latitude);
+//        queryBundle.putDouble(SEARCH_QUERY_URL_EXTRA_LNG2, latLng2.longitude);
+
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> populartimesSearchLoader = loaderManager.getLoader(POPULARTIMES_SEARCH_LOADER_ID);
         if (populartimesSearchLoader == null) {
