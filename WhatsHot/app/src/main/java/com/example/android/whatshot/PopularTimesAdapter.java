@@ -2,13 +2,17 @@ package com.example.android.whatshot;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.whatshot.data.PopularTimesContract;
+import com.example.android.whatshot.utilities.DataProcessingUtils;
 
 /**
  * Created by Pedram on 3/18/2018.
@@ -23,6 +27,7 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
 
     private Cursor mCursor;
 
+    public static final String TAG = "PopularTimesAdapter";
 
     /**
      * Constructor for the PopularTimesAdapter that initializes the Context.
@@ -44,7 +49,16 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
 
     @Override
     public void onBindViewHolder(PopularTimesAdapterViewHolder holder, int position) {
+
+
         mCursor.moveToPosition(position);
+
+        String type = DataProcessingUtils.getTopVenueType(mCursor.getString(
+                mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_TYPES)));
+
+
+        holder.establishmentImageView.setContentDescription(type);
+        holder.establishmentImageView.setImageResource(DataProcessingUtils.getStringId(type));
 
         holder.establishmentNameView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_NAME)));
         holder.rankView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.VenueHoursEntry.COLUMN_POPULARITY)));
@@ -60,11 +74,13 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
 
         final TextView establishmentNameView;
         final TextView rankView;
+        final ImageView establishmentImageView;
 
         public PopularTimesAdapterViewHolder(View itemView) {
             super(itemView);
             establishmentNameView = itemView.findViewById(R.id.establishment_name);
             rankView = itemView.findViewById(R.id.rankTextView);
+            establishmentImageView = itemView.findViewById(R.id.establishment_image);
         }
 
         @Override
