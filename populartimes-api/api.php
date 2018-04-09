@@ -8,7 +8,15 @@
 define("API_KEY", "AIzaSyDCxT4SoE1Xtl475mkb7Up4Raqx-k3OrSY");
 
 
-$type = "bar";
+$type = $_GET['type'];
+
+$x1 = $_GET['lat1'];
+$y1 = $_GET['lng1'];
+
+$x2 = $_GET['lat2'];
+$y2 = $_GET['lng2'];
+
+
 
 // $x1 = "48.132986";
 // $y1 = "11.566126";
@@ -17,11 +25,11 @@ $type = "bar";
 // $y2 = "11.580047";
 
 
-$x1 = "37.763954161155425";
-$y1 = "-122.41661516952513";
+// $x1 = "37.763954161155425";
+// $y1 = "-122.41661516952513";
 
-$x2 = "37.75716107026401";
-$y2 = "-122.42462522888184";
+// $x2 = "37.75716107026401";
+// $y2 = "-122.42462522888184";
 
 
 $command = escapeshellcmd('python3 /home/forge/default/public/populartimes-api/test.py ' . API_KEY . " $type $x1 $y1 $x2 $y2");
