@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
 
         switch (loaderId) {
             case POPULARTIMES_SEARCH_LOADER_ID:
-                // TODO: Implement to load data from API when data is not current
+                // TODO: Implement to load data from API when data is not current (First Load check important)
                 boolean isDataCurrent = false;
                 if (!isDataCurrent) {
                     readJsonFromApi(args);
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     public void onConnected(@Nullable Bundle bundle) {
 
         if (leftGeofence) {
-            //TODO: Refresh API call
+            //TODO: Refresh API call (readJsonFromApi();)
             mGeofencing.updateGeofence();
             mGeofencing.registerGeofence();
         }

@@ -43,7 +43,7 @@
             android:label="@string/title_activity_settings">
         </activity>
 
-        <receiver android:name=".utilities.GeofenceBroadcastReceiver"/>
+        <receiver android:name=".MainActivity$GeofenceBroadcastReceiver"/>
 
         <provider
             android:authorities="com.example.android.whatshot"
