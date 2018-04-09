@@ -9,13 +9,14 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,9 +30,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.android.whatshot.data.PlaceTypes;
 import com.example.android.whatshot.data.PopularTimesContract;
-import com.example.android.whatshot.utilities.FakeDataUtils;
 import com.example.android.whatshot.utilities.Geofencing;
+import com.example.android.whatshot.utilities.LocationUtils;
 import com.example.android.whatshot.utilities.NetworkUtils;
 import com.example.android.whatshot.utilities.WhatsHotJsonUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -39,6 +41,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 
@@ -70,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     private Location location;
 
     private Boolean leftGeofence;
+
+    private AsyncTask<Void, Void, Void> mFetchPopulartimes;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -105,7 +111,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         /*
          * Initialize the loader
          */
-        makePopularTimesSearchQuery(0, 12);
+
+        LatLng[] latLngBoundary = LocationUtils.getRectangleBoundary(new LatLng(37.561717, -122.280900), 0.5);
+
+        makePopularTimesSearchQuery(0, 12, latLngBoundary[0], latLngBoundary[1], PlaceTypes.PlacesTypes.restaurant);
 
         if (ActivityCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -141,26 +150,63 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         }
     }
 
+
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, final Bundle args) {
 
         switch (loaderId) {
             case POPULARTIMES_SEARCH_LOADER_ID:
-                // TODO: Implement to load data from API when data is not current (First Load check important)
-                boolean isDataCurrent = false;
-                if (!isDataCurrent) {
-                    readJsonFromApi(args);
-                }
 
-                Uri populartimesQueryUri = PopularTimesContract.VenueEntry.buildVenueUriWithDayAndHour(args.getInt(SEARCH_QUERY_URL_EXTRA_DAY), args.getInt(SEARCH_QUERY_URL_EXTRA_HOUR));
 
-                Log.d(getClass().toString(), "populartimesQueryUri: " + populartimesQueryUri);
-                return new CursorLoader(this,
-                        populartimesQueryUri,
-                        null,
-                        null,
-                        null,
-                        null);
+                return new AsyncTaskLoader<Cursor>(this) {
+                    Cursor mPopularTimesData;
+
+                    @Override
+                    protected void onStartLoading() {
+                        /* If no arguments were passed, we don’t have a query to perform. Simply return. */
+                        if (args == null) {
+                            return;
+                        }
+
+                        // If mPopularTimesJson is not null, deliver that result. Otherwise, force a load
+                        if (mPopularTimesData != null)
+                            deliverResult(mPopularTimesData);
+                        else
+                            forceLoad();
+                    }
+
+                    @Override
+                    public Cursor loadInBackground() {
+                        /* Extract the search query from the args using our constant */
+                        // TODO: Implement to load data from API when data is not current
+                        boolean isDataCurrent = false;
+                        if (!isDataCurrent) {
+                            readJsonFromApi(args);
+                        }
+
+                        Log.d("In loadInBackground: ", "readJsonFromApi in Loader Finished");
+                        Uri populartimesQueryUri = PopularTimesContract.VenueEntry.buildVenueUriWithDayAndHour(
+                                args.getInt(SEARCH_QUERY_URL_EXTRA_DAY), args.getInt(SEARCH_QUERY_URL_EXTRA_HOUR));
+
+                        Log.d(getClass().toString(), "populartimesQueryUri: " + populartimesQueryUri);
+                        return getContext().getContentResolver().query(
+                                populartimesQueryUri,
+                                null,
+                                null,
+                                null,
+                                null);
+                    }
+
+                    // Override deliverResult and store the data in mGithubJson
+                    // Call super.deliverResult after storing the data
+                    @Override
+                    public void deliverResult(Cursor data) {
+                        mPopularTimesData = data;
+                        super.deliverResult(data);
+                    }
+                };
+
+
             default:
                 throw new RuntimeException("Loader Not Implemented: " + loaderId);
 
@@ -194,8 +240,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         try {
             URL populartimesUrl = new URL(searchQueryUrlString);
             Log.d(getClass().toString(), "populartimesUrl in Loader: " + populartimesUrl);
-//                    String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
-            String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
+
+            String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
+
+            //String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
             Log.d(getClass().toString(), "populartimesSearchResults in Loader: " + populartimesSearchResults);
 //                    return WhatsHotJsonUtils.sortByDayAndHour(populartimesSearchResults, 0, 0);
             ContentValues[] contentValues = WhatsHotJsonUtils.getVenueContentValuesFromJsonString(populartimesSearchResults, this);
@@ -275,14 +323,21 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         }
     }
 
-    private void makePopularTimesSearchQuery(int day, int hour) {
-        URL populartimesSearchUrl = NetworkUtils.buildUrl("");
+    private void makePopularTimesSearchQuery(int day, int hour, LatLng latLng1, LatLng latLng2, PlaceTypes.PlacesTypes placeType) {
+
+        URL populartimesSearchUrl = NetworkUtils.buildUrl("", latLng1, latLng2, placeType);
 
         Log.d(getClass().toString(), "makePopularTimesSearchQuery() URL: " + populartimesSearchUrl.toString());
         Bundle queryBundle = new Bundle();
         queryBundle.putString(SEARCH_QUERY_URL_EXTRA, populartimesSearchUrl.toString());
         queryBundle.putInt(SEARCH_QUERY_URL_EXTRA_DAY, day);
         queryBundle.putInt(SEARCH_QUERY_URL_EXTRA_HOUR, hour);
+
+//        queryBundle.putDouble(SEARCH_QUERY_URL_EXTRA_LAT1, latLng1.latitude);
+//        queryBundle.putDouble(SEARCH_QUERY_URL_EXTRA_LNG1, latLng1.longitude);
+//        queryBundle.putDouble(SEARCH_QUERY_URL_EXTRA_LAT2, latLng2.latitude);
+//        queryBundle.putDouble(SEARCH_QUERY_URL_EXTRA_LNG2, latLng2.longitude);
+
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String> populartimesSearchLoader = loaderManager.getLoader(POPULARTIMES_SEARCH_LOADER_ID);
         if (populartimesSearchLoader == null) {
