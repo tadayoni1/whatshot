@@ -27,7 +27,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.whatshot.data.PlaceTypes;
@@ -51,8 +54,11 @@ import java.net.URL;
 
 // TODO: Kenda, Hamed
 
-public class MainActivity extends AppCompatActivity implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity
+        implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        AdapterView.OnItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -72,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     private Geofencing mGeofencing;
     private Location location;
 
-    private Boolean leftGeofence;
+    private Boolean mLeftGeofence;
+
+    private Spinner venueTypeSpinner;
 
     private AsyncTask<Void, Void, Void> mFetchPopulartimes;
 
@@ -90,6 +98,10 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        venueTypeSpinner = (Spinner) findViewById(R.id.search_drop_down);
+        venueTypeSpinner.setAdapter(new ArrayAdapter<PlaceTypes.DropDownPlacesTypes>(this, android.R.layout.simple_spinner_item, PlaceTypes.DropDownPlacesTypes.values()));
+        venueTypeSpinner.setOnItemSelectedListener(this);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
@@ -112,9 +124,6 @@ public class MainActivity extends AppCompatActivity implements android.support.v
          * Initialize the loader
          */
 
-        LatLng[] latLngBoundary = LocationUtils.getRectangleBoundary(new LatLng(37.561717, -122.280900), 0.5);
-
-        makePopularTimesSearchQuery(0, 12, latLngBoundary[0], latLngBoundary[1], PlaceTypes.PlacesTypes.restaurant);
 
         if (ActivityCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -129,13 +138,14 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                     .addApi(LocationServices.API)
                     .enableAutoManage(this, this)
                     .build();
+            mClient.connect();
             location = LocationServices.FusedLocationApi.getLastLocation(mClient);
+            mGeofencing = new Geofencing(this, mClient, location);
+            mGeofencing.updateGeofence();
+            mGeofencing.registerGeofence();
         }
 
-        mGeofencing = new Geofencing(this, mClient, location);
-        mGeofencing.updateGeofence();
-        mGeofencing.registerGeofence();
-        leftGeofence = false;
+        mLeftGeofence = false;
     }
 
     @Override
@@ -143,7 +153,17 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSIONS_REQUEST_FINE_LOCATION && (ActivityCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            mClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .enableAutoManage(this, this)
+                    .build();
+            mClient.connect();
             location = LocationServices.FusedLocationApi.getLastLocation(mClient);
+            mGeofencing = new Geofencing(this, mClient, location);
+            mGeofencing.updateGeofence();
+            mGeofencing.registerGeofence();
         } else {
             Toast.makeText(getApplicationContext(), "Your location is required for app to function", Toast.LENGTH_LONG).show();
             return;
@@ -179,8 +199,9 @@ public class MainActivity extends AppCompatActivity implements android.support.v
                     public Cursor loadInBackground() {
                         /* Extract the search query from the args using our constant */
                         // TODO: Implement to load data from API when data is not current
-                        boolean isDataCurrent = false;
-                        if (!isDataCurrent) {
+                        Boolean isDataCurrent = false;
+//                        if (mLeftGeofence) {
+                        if(!isDataCurrent) {
                             readJsonFromApi(args);
                         }
 
@@ -323,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
         }
     }
 
-    private void makePopularTimesSearchQuery(int day, int hour, LatLng latLng1, LatLng latLng2, PlaceTypes.PlacesTypes placeType) {
+    private void makePopularTimesSearchQuery(int day, int hour, LatLng latLng1, LatLng latLng2, String placeType) {
 
         URL populartimesSearchUrl = NetworkUtils.buildUrl("", latLng1, latLng2, placeType);
 
@@ -366,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
-        if (leftGeofence) {
+        if (mLeftGeofence) {
             //TODO: Refresh API call
             mGeofencing.updateGeofence();
             mGeofencing.registerGeofence();
@@ -382,6 +403,28 @@ public class MainActivity extends AppCompatActivity implements android.support.v
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.i(TAG, "API Client Connection Failed!");
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Double lat = 37.561717;
+        Double lng = -122.280900;
+
+        try {
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        LatLng[] latLngBoundary = LocationUtils.getRectangleBoundary(new LatLng(lat, lng), Double.parseDouble(getString(R.string.default_radius)));
+
+        makePopularTimesSearchQuery(0, 12, latLngBoundary[0], latLngBoundary[1], venueTypeSpinner.getSelectedItem().toString());
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     public class GeofenceBroadcastReceiver extends BroadcastReceiver {
@@ -407,7 +450,7 @@ public class MainActivity extends AppCompatActivity implements android.support.v
             if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
                 //TODO what to do when reentring geofence?
             } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
-                leftGeofence = true;
+                mLeftGeofence = true;
                 mGeofencing.unRegisterGeofence();
             } else {
                 // Log the error.
