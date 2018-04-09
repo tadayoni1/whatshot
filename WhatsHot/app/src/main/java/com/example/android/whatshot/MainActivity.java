@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.android.whatshot.data.PlaceTypes;
 import com.example.android.whatshot.data.PopularTimesContract;
+import com.example.android.whatshot.utilities.FakeDataUtils;
 import com.example.android.whatshot.utilities.Geofencing;
 import com.example.android.whatshot.utilities.LocationUtils;
 import com.example.android.whatshot.utilities.NetworkUtils;
@@ -127,7 +128,6 @@ public class MainActivity extends AppCompatActivity
 
         if (ActivityCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getApplicationContext(), "Your location is required for app to function", Toast.LENGTH_LONG).show();
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_FINE_LOCATION);
@@ -262,9 +262,9 @@ public class MainActivity extends AppCompatActivity
             URL populartimesUrl = new URL(searchQueryUrlString);
             Log.d(getClass().toString(), "populartimesUrl in Loader: " + populartimesUrl);
 
-            String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
+            //String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
 
-            //String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
+            String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
             Log.d(getClass().toString(), "populartimesSearchResults in Loader: " + populartimesSearchResults);
 //                    return WhatsHotJsonUtils.sortByDayAndHour(populartimesSearchResults, 0, 0);
             ContentValues[] contentValues = WhatsHotJsonUtils.getVenueContentValuesFromJsonString(populartimesSearchResults, this);
@@ -371,16 +371,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if (!mClient.isConnecting() || !mClient.isConnected()) {
-            mClient.connect();
+        if(mClient != null) {
+            if (!mClient.isConnecting() || !mClient.isConnected()) {
+                mClient.connect();
+            }
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mClient.isConnecting() || mClient.isConnected()) {
-            mClient.disconnect();
+        if(mClient != null) {
+            if (mClient.isConnecting() || mClient.isConnected()) {
+                mClient.disconnect();
+            }
         }
     }
 
@@ -397,7 +401,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int i) {
-        mClient.connect();
+        if(mClient != null) {
+            mClient.connect();
+        }
     }
 
     @Override

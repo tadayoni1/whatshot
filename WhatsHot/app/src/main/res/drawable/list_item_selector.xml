@@ -7,3 +7,4 @@
     <!-- This should have a default drawable color = "@android:color/background_light" -->
     <item android:drawable="@color/white_smoke" />
 </selector>
+

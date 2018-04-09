@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:background="@drawable/list_item_selector"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/list_item_selector">
+    android:layout_height="wrap_content">
 
     <!-- TODO: Kenda, Hamed -->
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/item_view"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -20,30 +24,35 @@
         <ImageView
             android:id="@+id/establishment_image"
             android:layout_gravity="center"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             app:srcCompat="@mipmap/ic_airport_71"
-            android:layout_weight="2"/>
+            android:layout_weight="1"/>
 
         <!-- TextView that displays the name of the establishment -->
 
         <TextView
             android:id="@+id/establishment_name"
             style="@style/itemListStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:textSize="30sp"
             tools:text="Joe's Diner"
-            android:layout_weight="4"/>
+            android:textSize="20sp"
+            android:lines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:layout_weight="6"/>
 
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <LinearLayout
@@ -70,7 +79,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="1dp"
                 android:orientation="horizontal">
 
                 <TextView

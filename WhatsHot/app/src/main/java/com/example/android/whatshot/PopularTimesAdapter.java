@@ -62,6 +62,7 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
 
         holder.establishmentNameView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_NAME)));
         holder.rankView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.VenueHoursEntry.COLUMN_POPULARITY)));
+        holder.rantingView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_RATING)));
     }
 
     @Override
@@ -74,12 +75,14 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
 
         final TextView establishmentNameView;
         final TextView rankView;
+        final TextView rantingView;
         final ImageView establishmentImageView;
 
         public PopularTimesAdapterViewHolder(View itemView) {
             super(itemView);
             establishmentNameView = itemView.findViewById(R.id.establishment_name);
             rankView = itemView.findViewById(R.id.rankTextView);
+            rantingView = itemView.findViewById(R.id.ratingsTextView);
             establishmentImageView = itemView.findViewById(R.id.establishment_image);
         }
 
