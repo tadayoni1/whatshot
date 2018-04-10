@@ -58,9 +58,14 @@ public class DetailActivity extends AppCompatActivity implements  LoaderManager.
         mLocationNameTV=(TextView)findViewById(R.id.location_name);
         mDateTV=(TextView)findViewById(R.id.date);
         mRankingRB = (RatingBar)findViewById(R.id.ratings);
-        mUri = getIntent().getData();
+
+       mUri = getIntent().getData();
+
+        Bundle bundle=getIntent().getExtras();
+
+        Log.d("detail activity", "Arrived Detail Activity"+mUri.getPath());
         if (mUri == null) throw new NullPointerException("URI for DetailActivity cannot be null");
-        getSupportLoaderManager().initLoader(ID_DETAIL_LOADER,null, this);
+     //   getSupportLoaderManager().initLoader(ID_DETAIL_LOADER,null, this);
     }
 
 
@@ -95,13 +100,11 @@ public class DetailActivity extends AppCompatActivity implements  LoaderManager.
             return;
         }
 
-        String venueName=data.getString(INDEX_VENUE_NAME);
-        mLocationNameTV.setText(venueName);
+        //String venueName=data.getString(INDEX_VENUE_NAME);
+       // mLocationNameTV.setText(venueName);
 
-        String rating= data.getString(INDEX_VENUE_RATING);
-        Log.i("Testing rating", rating);
-
-
+        //String rating= data.getString(INDEX_VENUE_RATING);
+ //       Log.i("Testing rating", rating);
 
 
     }
