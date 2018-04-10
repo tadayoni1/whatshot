@@ -57,9 +57,10 @@ public class DetailActivity extends AppCompatActivity implements  LoaderManager.
         setContentView(R.layout.activity_detail);
         mLocationNameTV=(TextView)findViewById(R.id.location_name);
         mDateTV=(TextView)findViewById(R.id.date);
-        mRankingRB=(RatingBar)findViewById(R.id.ratings);
-        mUri= mUri = getIntent().getData();
-        getSupportLoaderManager().initLoader(ID_DETAIL_LOADER,null, null);
+        mRankingRB = (RatingBar)findViewById(R.id.ratings);
+        mUri = getIntent().getData();
+        if (mUri == null) throw new NullPointerException("URI for DetailActivity cannot be null");
+        getSupportLoaderManager().initLoader(ID_DETAIL_LOADER,null, this);
     }
 
 

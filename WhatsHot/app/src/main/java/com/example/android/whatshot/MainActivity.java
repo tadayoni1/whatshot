@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity
         implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemSelectedListener,
+        PopularTimesAdapter.PopularTimesAdapterOnClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity
 
         mRecyclerView.setHasFixedSize(true);
 
-        mPopularTimesAdapter = new PopularTimesAdapter(this);
+        mPopularTimesAdapter = new PopularTimesAdapter(this, this);
 
         mRecyclerView.setAdapter(mPopularTimesAdapter);
 
@@ -299,6 +300,15 @@ public class MainActivity extends AppCompatActivity
     public void onLoaderReset(Loader<Cursor> loader) {
         mPopularTimesAdapter.swapCursor(null);
     }
+
+    /**
+     * This method is for responding to clicks from our list.
+     *
+     */
+    @Override
+    public void onClick(int position) {
+    }
+
 
     private void showDataView() {
         /* First, hide the loading indicator */

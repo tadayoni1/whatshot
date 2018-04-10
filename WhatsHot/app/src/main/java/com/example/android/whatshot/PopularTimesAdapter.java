@@ -1,7 +1,9 @@
 package com.example.android.whatshot;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,10 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.whatshot.data.PopularTimesContract;
 import com.example.android.whatshot.utilities.DataProcessingUtils;
+
+import static com.example.android.whatshot.data.PopularTimesContract.VenueEntry.buildVenueUriWithDayAndHour;
 
 /**
  * Created by Pedram on 3/18/2018.
@@ -29,11 +35,27 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
 
     public static final String TAG = "PopularTimesAdapter";
 
+    /*
+    * Below, we've defined an interface to handle clicks on items within this Adapter. In the
+    * constructor of our PopularTimesAdapter, we receive an instance of a class that has implemented
+    * said interface. We store that instance in this variable to call the onClick method whenever
+    * an item is clicked in the list.
+    */
+    final private PopularTimesAdapterOnClickHandler mClickHandler;
+
+    /**
+     * The interface that receives onClick messages.
+     */
+    public interface PopularTimesAdapterOnClickHandler {
+        void onClick(int position);
+    }
+
     /**
      * Constructor for the PopularTimesAdapter that initializes the Context.
      */
-    public PopularTimesAdapter(Context mContext) {
+    public PopularTimesAdapter(Context mContext, PopularTimesAdapterOnClickHandler clickHandler) {
         this.mContext = mContext;
+        mClickHandler = clickHandler;
     }
 
     @Override
@@ -84,11 +106,19 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
             rankView = itemView.findViewById(R.id.rankTextView);
             rantingView = itemView.findViewById(R.id.ratingsTextView);
             establishmentImageView = itemView.findViewById(R.id.establishment_image);
+
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-
+            int adapterPosition = getAdapterPosition();
+            mClickHandler.onClick(adapterPosition);
+            Intent detailIntent = new Intent(mContext, DetailActivity.class);
+            Uri uriForItemClicked = buildVenueUriWithDayAndHour(0, 12);
+            detailIntent.setData(uriForItemClicked);
+            detailIntent.putExtra("currentCursorPosition", adapterPosition);
+            mContext.startActivity(detailIntent);
         }
     }
 
