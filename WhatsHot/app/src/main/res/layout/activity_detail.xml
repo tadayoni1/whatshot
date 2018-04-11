@@ -15,10 +15,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
-        android:id="@+id/location_name"
+        android:id="@+id/tv_location_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Empire State"
+        />
+    <TextView
+        android:id="@+id/tv_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="800-999-6712"
+        />
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="123 Blvrd"
         />
     <TextView
         android:id="@+id/date"
@@ -36,9 +48,9 @@
         android:id="@+id/ratings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:numStars="4"
+        android:numStars="5"
         android:stepSize="1.0"
-        android:rating="3.0"
+        android:isIndicator="true"
         />
     <TextView
         android:id="@+id/popularTime"
@@ -46,5 +58,78 @@
         android:layout_height="wrap_content"
         tools:text="4:30PM-8:30PM"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shrinkColumns="*"
+        android:stretchColumns="*"
+        >
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:textColor="@color/white_smoke"
+                android:text="Popularity" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Mon"
+                android:gravity="center"
+                />
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Tue"
+                android:gravity="center"
+                />
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Wed"
+                android:gravity="center"
+                />
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Thurs"
+                android:gravity="center"
+                />
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Fri"
+                android:gravity="center"
+                />
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Sat"
+                android:gravity="center"
+                />
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Sun"
+                android:gravity="center"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+
+    </TableLayout>
+
 
 </LinearLayout>
