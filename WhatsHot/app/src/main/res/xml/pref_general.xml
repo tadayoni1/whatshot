@@ -8,4 +8,10 @@
     android:key="@string/pref_radius_list_key"
     android:title="@string/pref_radius_list_title" />
 
+    <ListPreference
+        android:defaultValue="@string/pref_units_label_metric"
+        android:entries="@array/pref_units_options"
+        android:entryValues="@array/pref_units_values"
+        android:key="@string/pref_units_list_key"
+        android:title="@string/pref_units_list_title" />
 </PreferenceScreen>
