@@ -110,18 +110,27 @@
     <string name="pref_radius_list_title">Search Radius</string>
     <string name="pref_radius_list_key" translatable="false">pref-radius</string>
 
+    <!-- radius options imperial  -->
+    <string name="pref_radius_imperial_small">5 miles</string>
+    <string name="pref_radius_imperial_medium">10 miles</string>
+    <string name="pref_radius_imperial_large">20 miles</string>
+
+    <!-- radius options metric  -->
+    <string name="pref_radius_metric_small">10 km</string>
+    <string name="pref_radius_metric_medium">20 km</string>
+    <string name="pref_radius_metric_large">30 km</string>
+
+
     <!-- English or metric settings -->
     <string name="pref_units_list_title">Units</string>
     <string name="pref_units_list_key" translatable="false">pref-units</string>
+
 
     <!-- Label for metric option in unit preference -->
     <string name="pref_units_label_metric">Metric</string>
 
     <!-- Label for imperial option in unit preference -->
     <string name="pref_units_label_imperial">Imperial</string>
-
-    <!-- Key name for temperature unit preference in SharedPreferences -->
-    <string name="pref_units_key" translatable="false">units</string>
 
     <!-- Value in SharedPreferences for metric unit option -->
     <string name="pref_units_metric" translatable="false">metric</string>
