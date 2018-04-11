@@ -48,7 +48,7 @@ public class Geofencing implements ResultCallback<Status> {
                     .setExpirationDuration(GEOFENCE_TIMEOUT)
                     .setCircularRegion(mLocation.getLatitude(), mLocation.getLongitude(), GEOFENCE_RADIUS)
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                    .setRequestId(mLocation.toString())
+                    .setRequestId(TAG)
                     .build();
     }
 

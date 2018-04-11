@@ -115,7 +115,6 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
             Intent detailIntent = new Intent(mContext, DetailActivity.class);
             Uri uriForItemClicked = buildVenueUriWithDayAndHourAndVenueId(0, 12, venue_id);
             detailIntent.setData(uriForItemClicked);
-            detailIntent.putExtra("currentCursorPosition", adapterPosition);
             mContext.startActivity(detailIntent);
         }
     }
