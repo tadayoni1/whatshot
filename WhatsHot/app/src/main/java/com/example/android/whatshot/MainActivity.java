@@ -35,7 +35,6 @@ import android.widget.Toast;
 
 import com.example.android.whatshot.data.PlaceTypes;
 import com.example.android.whatshot.data.PopularTimesContract;
-import com.example.android.whatshot.utilities.FakeDataUtils;
 import com.example.android.whatshot.utilities.Geofencing;
 import com.example.android.whatshot.utilities.LocationUtils;
 import com.example.android.whatshot.utilities.NetworkUtils;
@@ -263,9 +262,9 @@ public class MainActivity extends AppCompatActivity
             URL populartimesUrl = new URL(searchQueryUrlString);
             Log.d(getClass().toString(), "populartimesUrl in Loader: " + populartimesUrl);
 
-            //String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
+            String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
 
-            String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
+//            String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
             Log.d(getClass().toString(), "populartimesSearchResults in Loader: " + populartimesSearchResults);
 //                    return WhatsHotJsonUtils.sortByDayAndHour(populartimesSearchResults, 0, 0);
             ContentValues[] contentValues = WhatsHotJsonUtils.getVenueContentValuesFromJsonString(populartimesSearchResults, this);
@@ -280,6 +279,8 @@ public class MainActivity extends AppCompatActivity
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
         }
         return true;
@@ -436,6 +437,8 @@ public class MainActivity extends AppCompatActivity
         LatLng[] latLngBoundary = LocationUtils.getRectangleBoundary(new LatLng(lat, lng), Double.parseDouble(getString(R.string.default_radius)));
 
         makePopularTimesSearchQuery(0, 12, latLngBoundary[0], latLngBoundary[1], venueTypeSpinner.getSelectedItem().toString());
+
+        Log.d(this.getClass().toString(), "venueTypeSpinner.getSelectedItem().toString(): " + venueTypeSpinner.getSelectedItem().toString());
     }
 
     @Override
