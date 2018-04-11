@@ -4,21 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.whatshot.data.PopularTimesContract;
 import com.example.android.whatshot.utilities.DataProcessingUtils;
 
-import static com.example.android.whatshot.data.PopularTimesContract.VenueEntry.buildVenueUriWithDayAndHour;
+import static com.example.android.whatshot.data.PopularTimesContract.VenueEntry.buildVenueUriWithDayAndHourAndVenueId;
 
 /**
  * Created by Pedram on 3/18/2018.
@@ -85,6 +81,7 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
         holder.establishmentNameView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_NAME)));
         holder.rankView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.VenueHoursEntry.COLUMN_POPULARITY)));
         holder.rantingView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_RATING)));
+        holder.venue_id = mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_VENUE_ID));
     }
 
     @Override
@@ -99,6 +96,7 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
         final TextView rankView;
         final TextView rantingView;
         final ImageView establishmentImageView;
+        String venue_id;
 
         public PopularTimesAdapterViewHolder(View itemView) {
             super(itemView);
@@ -115,7 +113,7 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
             int adapterPosition = getAdapterPosition();
             mClickHandler.onClick(adapterPosition);
             Intent detailIntent = new Intent(mContext, DetailActivity.class);
-            Uri uriForItemClicked = buildVenueUriWithDayAndHour(0, 12);
+            Uri uriForItemClicked = buildVenueUriWithDayAndHourAndVenueId(0, 12, venue_id);
             detailIntent.setData(uriForItemClicked);
             detailIntent.putExtra("currentCursorPosition", adapterPosition);
             mContext.startActivity(detailIntent);

@@ -53,6 +53,14 @@ public class PopularTimesContract {
                     .build();
         }
 
+        public static Uri buildVenueUriWithDayAndHourAndVenueId(int day, int hour, String venue_id) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(Integer.toString(day))
+                    .appendPath(Integer.toString(hour))
+                    .appendPath(venue_id)
+                    .build();
+        }
+
         public static final class VenueHoursEntry implements BaseColumns {
             public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                     .appendPath(PATH_VENUE_DETAILS)

@@ -25,6 +25,7 @@ public class PopularTimesProvider extends ContentProvider {
     public static final int CODE_VENUES = 100;
     public static final int CODE_VENUE_DETAILS = 101;
     public static final int CODE_VENUE_WITH_DAY_AND_HOUR = 102;
+    public static final int CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID = 103;
 
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -40,6 +41,8 @@ public class PopularTimesProvider extends ContentProvider {
         matcher.addURI(authority, PopularTimesContract.PATH_VENUE_DETAILS, CODE_VENUE_DETAILS);
 
         matcher.addURI(authority, PopularTimesContract.PATH_VENUE + "/#/#", CODE_VENUE_WITH_DAY_AND_HOUR);
+
+        matcher.addURI(authority, PopularTimesContract.PATH_VENUE + "/#/#/*", CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID);
 
         return matcher;
 
@@ -172,6 +175,45 @@ public class PopularTimesProvider extends ContentProvider {
                         null,
                         null,
                         VenueHoursEntry.COLUMN_POPULARITY + " DESC"
+                );
+
+                break;
+            }
+
+            case CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID: {
+                Log.d(getClass().toString(), "query for CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID");
+
+                List<String> pathSegment = uri.getPathSegments();
+                String day = pathSegment.get(1);
+                Log.d(getClass().toString(), "CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID pathSegment day: " + day);
+                String hour = pathSegment.get(2);
+                Log.d(getClass().toString(), "CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID pathSegment hour: " + hour);
+                String venue_id = pathSegment.get(3);
+                Log.d(getClass().toString(), "CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID pathSegment venue_id: " + venue_id);
+
+
+                String[] selectionArguments = new String[]{day, hour};
+
+                SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+                String tables = VenueEntry.TABLE_NAME + " INNER JOIN " + VenueHoursEntry.TABLE_NAME +
+                        " ON " + VenueHoursEntry.TABLE_NAME + "." + VenueHoursEntry.COLUMN_VENUE_ID +
+                        " = " + VenueEntry.TABLE_NAME + "." + VenueEntry.COLUMN_VENUE_ID;
+                qb.setTables(tables);
+
+                Log.d(getClass().toString(), "CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID query builder tables: " + tables);
+
+                String whereStatement = "";
+                whereStatement = VenueHoursEntry.COLUMN_DAY + " = '" + day + "'" + " AND " + VenueHoursEntry.COLUMN_HOUR + " = '" + hour + "'" +
+                        " AND " + VenueEntry.TABLE_NAME + "." + VenueHoursEntry.COLUMN_VENUE_ID + " = '" + venue_id + "'";;
+                qb.appendWhere(whereStatement);
+                Log.d(getClass().toString(), "CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID query builder whereStatements: " + whereStatement);
+                cursor = qb.query(mOpenHelper.getReadableDatabase(),
+                        projection,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
                 );
 
                 break;

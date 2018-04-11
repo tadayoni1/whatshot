@@ -65,7 +65,7 @@ public class DetailActivity extends AppCompatActivity implements  LoaderManager.
 
         Log.d("detail activity", "Arrived Detail Activity"+mUri.getPath());
         if (mUri == null) throw new NullPointerException("URI for DetailActivity cannot be null");
-     //   getSupportLoaderManager().initLoader(ID_DETAIL_LOADER,null, this);
+        getSupportLoaderManager().initLoader(ID_DETAIL_LOADER,null, this);
     }
 
 
@@ -75,7 +75,7 @@ public class DetailActivity extends AppCompatActivity implements  LoaderManager.
             case ID_DETAIL_LOADER:
                 return new CursorLoader(this,
                         mUri,
-                        POPULARTIMES_DETAIL_PROJECTION,
+                        null,
                         null,
                         null,
                         null);
