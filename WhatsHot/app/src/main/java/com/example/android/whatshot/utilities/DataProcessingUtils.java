@@ -14,7 +14,7 @@ public class DataProcessingUtils {
         int stringId;
         int iconId;
 
-        TypesTuple(int stringId, int iconId) {
+        TypesTuple(int iconId, int stringId) {
             this.stringId = stringId;
             this.iconId = iconId;
         }
