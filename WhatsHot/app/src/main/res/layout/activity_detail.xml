@@ -35,16 +35,21 @@
         />
     <TextView
         android:id="@+id/tv_type"
+        android:drawableStart="@drawable/ic_local_offer_primary_24dp"
+        android:drawableLeft="@drawable/ic_local_offer_primary_24dp"
         style="@style/detailActivityStyle"
-        tools:text="April 1,2018"
+        tools:text="@string/place_cafe"
         />
   <TextView
       android:id="@+id/popularity"
+      android:drawableStart="@drawable/ic_whatshot_primary_24dp"
+      android:drawableLeft="@drawable/ic_whatshot_primary_24dp"
       style="@style/detailActivityStyle"
       tools:text="hot"
       />
     <RatingBar
         android:id="@+id/ratings"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
@@ -56,6 +61,7 @@
         style="@style/detailActivityStyle"
         android:shrinkColumns="*"
         android:stretchColumns="*"
+        android:background="@color/colorPrimaryLight"
         >
 
         <TableRow

@@ -15,10 +15,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:bottom">4dp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:paddingLeft">2dp</item>
     </style>
     <style name="locationNameDetailStyle" parent="detailActivityStyle">
+        <item name="android:background">@color/colorPrimaryLight</item>
         <item name="android:textSize">24dp</item>
     </style>
 
