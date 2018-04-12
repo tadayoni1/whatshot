@@ -3,10 +3,10 @@
 <!-- TODO: Brian -->
     <ListPreference
         android:defaultValue="1"
-        android:entries="@array/pref_example_list_values"
+        android:entries="@array/pref_radius_options_imperial"
         android:entryValues="@array/list_preference_entries"
-    android:key="@string/pref_radius_list_key"
-    android:title="@string/pref_radius_list_title" />
+        android:key="@string/pref_radius_list_key"
+        android:title="@string/pref_radius_list_title" />
 
     <ListPreference
         android:defaultValue="@string/pref_units_label_metric"

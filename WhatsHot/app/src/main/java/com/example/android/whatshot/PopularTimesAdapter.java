@@ -75,7 +75,7 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
                 mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_TYPES)));
 
 
-        holder.establishmentImageView.setContentDescription(type);
+        holder.establishmentImageView.setContentDescription(mContext.getString(DataProcessingUtils.getStringPlaceId(type)));
         holder.establishmentImageView.setImageResource(DataProcessingUtils.getStringIconId(type));
 
         holder.establishmentNameView.setText(mCursor.getString(mCursor.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_NAME)));
