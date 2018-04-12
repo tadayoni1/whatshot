@@ -10,9 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.android.whatshot.data.PopularTimesContract;
+
 // TODO: Yany, Kerry
 public class DetailActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor> {
-    private TextView mLocationNameTV, mDateTV, mPopularityTV, mAddressTV,mPhoneTV;
+    private TextView mLocationNameTV, mTypeTV, mPopularityTV, mAddressTV,mPhoneTV, mMonTV;
 
     private RatingBar mRatingRB;
 
@@ -21,6 +23,7 @@ public class DetailActivity extends AppCompatActivity implements  LoaderManager.
     public static final int INDEX_VENUE_ADDRESS=3;
     public static final int INDEX_VENUE_PHONE=4;
     public static final int INDEX_VENUE_RATING=5;
+
     public static final int INDEX_VENUE_LAT=7;
     public static final int INDEX_VENUE_LNG=8;
     public static final int INDEX_VENUE_TYPE=9;
@@ -37,10 +40,11 @@ public class DetailActivity extends AppCompatActivity implements  LoaderManager.
         mLocationNameTV=(TextView)findViewById(R.id.tv_location_name);
         mPhoneTV=(TextView)findViewById(R.id.tv_phone);
         mAddressTV=(TextView)findViewById(R.id.tv_address);
+        mTypeTV=(TextView)findViewById(R.id.tv_type);
 
         mPopularityTV=(TextView)findViewById(R.id.popularity);
-        mDateTV=(TextView)findViewById(R.id.date);
         mRatingRB = (RatingBar)findViewById(R.id.ratings);
+        mMonTV=(TextView)findViewById(R.id.tv_monday);
 
        mUri = getIntent().getData();
 
@@ -89,12 +93,16 @@ public class DetailActivity extends AppCompatActivity implements  LoaderManager.
         String venueAddress="Address:\n"+data.getString(INDEX_VENUE_ADDRESS);
         mAddressTV.setText(venueAddress);
 
-        String[] venueType=data.getString(INDEX_VENUE_TYPE).split(",");
-        mPopularityTV.setText("Type:\n"+venueType[0].replaceAll("[^a-zA-Z0-9]",""));
+        String[] venueTypes=data.getString(INDEX_VENUE_TYPE).split(",");
+        String venueType="Type: "+venueTypes[0].replaceAll("[^a-zA-Z0-9]","");
+        mTypeTV.setText(venueType);
+
+        String popularity=data.getString(data.getColumnIndex(PopularTimesContract.VenueEntry.COLUMN_RATING_N))+" users rated this venue.";
+        mPopularityTV.setText(popularity);
 
         float rating= Float.parseFloat(data.getString(INDEX_VENUE_RATING));
         mRatingRB.setRating(rating);
-
+        mMonTV.setText(data.getString(data.getColumnIndex(PopularTimesContract.VenueEntry.VenueHoursEntry.COLUMN_POPULARITY)));
 
     }
 

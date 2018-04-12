@@ -16,32 +16,31 @@
         android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/tv_location_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/locationNameDetailStyle"
         tools:text="Empire State"
         />
     <TextView
         android:id="@+id/tv_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_phone_primary_24dp"
+        android:drawableLeft="@drawable/ic_phone_primary_24dp"
+        style="@style/detailActivityStyle"
         tools:text="800-999-6712"
         />
     <TextView
         android:id="@+id/tv_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_place_primary_24dp"
+        android:drawableLeft="@drawable/ic_place_primary_24dp"
+        style="@style/detailActivityStyle"
         tools:text="123 Blvrd"
         />
     <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/tv_type"
+        style="@style/detailActivityStyle"
         tools:text="April 1,2018"
         />
   <TextView
       android:id="@+id/popularity"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      style="@style/detailActivityStyle"
       tools:text="hot"
       />
     <RatingBar
@@ -52,19 +51,9 @@
         android:stepSize="1.0"
         android:isIndicator="true"
         />
-    <TextView
-        android:id="@+id/popularTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="4:30PM-8:30PM"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+
     <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/detailActivityStyle"
         android:shrinkColumns="*"
         android:stretchColumns="*"
         >
@@ -124,12 +113,16 @@
         </TableRow>
 
         <TableRow
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-
+            android:layout_height="match_parent" >
+            <TextView
+                android:id="@+id/tv_monday"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                />
+        </TableRow>
 
     </TableLayout>
-
 
 </LinearLayout>

@@ -9,7 +9,18 @@
         <!-- Used for settings preference theme -->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
-
+    <!-- handles style for DetailActivity Layout-->
+    <style name="detailActivityStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:bottom">4dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="locationNameDetailStyle" parent="detailActivityStyle">
+        <item name="android:textSize">24dp</item>
+    </style>
 
     <!-- handles common list styles for the main view -->
     <style name="itemListStyle">
