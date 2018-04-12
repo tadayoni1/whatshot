@@ -24,8 +24,9 @@ public class PopularTimesProvider extends ContentProvider {
 
     public static final int CODE_VENUES = 100;
     public static final int CODE_VENUE_DETAILS = 101;
-    public static final int CODE_VENUE_WITH_DAY_AND_HOUR = 102;
-    public static final int CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID = 103;
+    public static final int CODE_VENUE_DETAILS_ONLY = 102;
+    public static final int CODE_VENUE_WITH_DAY_AND_HOUR = 103;
+    public static final int CODE_VENUE_WITH_DAY_AND_HOUR_AND_VENUE_ID = 104;
 
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -39,6 +40,8 @@ public class PopularTimesProvider extends ContentProvider {
         matcher.addURI(authority, PopularTimesContract.PATH_VENUE, CODE_VENUES);
 
         matcher.addURI(authority, PopularTimesContract.PATH_VENUE_DETAILS, CODE_VENUE_DETAILS);
+
+        matcher.addURI(authority, PopularTimesContract.PATH_VENUE_DETAILS + "/*" , CODE_VENUE_DETAILS_ONLY);
 
         matcher.addURI(authority, PopularTimesContract.PATH_VENUE + "/#/#", CODE_VENUE_WITH_DAY_AND_HOUR);
 
@@ -122,21 +125,14 @@ public class PopularTimesProvider extends ContentProvider {
         Cursor cursor;
 
         switch (sUriMatcher.match(uri)) {
-            case CODE_VENUES: {
-                Log.d(getClass().toString(), "query for CODE_VENUES");
+            case CODE_VENUE_DETAILS_ONLY: {
+                Log.d(getClass().toString(), "query for CODE_VENUE_DETAILS");
                 String venue_id = uri.getLastPathSegment();
 
                 String[] selectionArguments = new String[]{venue_id};
 
-                SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-
-                qb.setTables(VenueEntry.TABLE_NAME + " JOIN " + VenueHoursEntry.TABLE_NAME +
-                        " ON " + VenueHoursEntry.TABLE_NAME + "." + VenueHoursEntry.COLUMN_VENUE_ID +
-                        " = " + VenueEntry.TABLE_NAME + "." + VenueEntry.COLUMN_VENUE_ID);
-
                 cursor = mOpenHelper.getReadableDatabase().query(
-                        VenueEntry.TABLE_NAME,
-
+                        VenueHoursEntry.TABLE_NAME,
                         projection,
                         VenueEntry.COLUMN_VENUE_ID + " = ? ",
                         selectionArguments,

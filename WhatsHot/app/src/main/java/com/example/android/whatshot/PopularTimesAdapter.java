@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.android.whatshot.data.PopularTimesContract;
 import com.example.android.whatshot.utilities.DataProcessingUtils;
+import com.example.android.whatshot.utilities.DateUtils;
 
 import static com.example.android.whatshot.data.PopularTimesContract.VenueEntry.buildVenueUriWithDayAndHourAndVenueId;
 
@@ -113,8 +114,10 @@ public class PopularTimesAdapter extends RecyclerView.Adapter<PopularTimesAdapte
             int adapterPosition = getAdapterPosition();
             mClickHandler.onClick(adapterPosition);
             Intent detailIntent = new Intent(mContext, DetailActivity.class);
-            Uri uriForItemClicked = buildVenueUriWithDayAndHourAndVenueId(0, 12, venue_id);
-            detailIntent.setData(uriForItemClicked);
+            Uri venueUriForItemClicked = buildVenueUriWithDayAndHourAndVenueId(DateUtils.getDayOfTheWeekForNow(), DateUtils.getDayOfTheWeekForNow(), venue_id);
+            Uri venueDetailsUriForItemClicked = PopularTimesContract.VenueEntry.VenueHoursEntry.buildVenueDetailUriWithVenueId(venue_id);
+            detailIntent.putExtra(MainActivity.DETAIL_ACTIVITY_EXTRA_VENUE, venueUriForItemClicked.toString());
+            detailIntent.putExtra(MainActivity.DETAIL_ACTIVITY_EXTRA_VENUE_DETAILS, venueDetailsUriForItemClicked.toString());
             mContext.startActivity(detailIntent);
         }
     }

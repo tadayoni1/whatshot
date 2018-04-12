@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.android.whatshot.data.PlaceTypes;
 import com.example.android.whatshot.data.PopularTimesContract;
+import com.example.android.whatshot.utilities.DateUtils;
 import com.example.android.whatshot.utilities.FakeDataUtils;
 import com.example.android.whatshot.utilities.Geofencing;
 import com.example.android.whatshot.utilities.LocationUtils;
@@ -78,6 +79,9 @@ public class MainActivity extends AppCompatActivity
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
     private static final String SEARCH_QUERY_URL_EXTRA_DAY = "day";
     private static final String SEARCH_QUERY_URL_EXTRA_HOUR = "hour";
+
+    public static final String DETAIL_ACTIVITY_EXTRA_VENUE = "venue";
+    public static final String DETAIL_ACTIVITY_EXTRA_VENUE_DETAILS = "venue_details";
 
     private GoogleApiClient mClient;
     private Geofencing mGeofencing;
@@ -464,10 +468,12 @@ public class MainActivity extends AppCompatActivity
 
         LatLng[] latLngBoundary = LocationUtils.getRectangleBoundary(new LatLng(lat[0], lng[0]), Double.parseDouble(getString(R.string.default_radius)));
 
-        makePopularTimesSearchQuery(0, 12, latLngBoundary[0], latLngBoundary[1], venueTypeSpinner.getSelectedItem().toString());
+        makePopularTimesSearchQuery(DateUtils.getDayOfTheWeekForNow(), DateUtils.getDayOfTheWeekForNow(), latLngBoundary[0], latLngBoundary[1], venueTypeSpinner.getSelectedItem().toString());
 
         Log.d(this.getClass().toString(), "venueTypeSpinner.getSelectedItem().toString(): " + venueTypeSpinner.getSelectedItem().toString());
     }
+
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {

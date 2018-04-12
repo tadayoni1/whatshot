@@ -62,6 +62,12 @@ public class PopularTimesContract {
         }
 
         public static final class VenueHoursEntry implements BaseColumns {
+            public static Uri buildVenueDetailUriWithVenueId(String venue_id) {
+                return CONTENT_URI.buildUpon()
+                        .appendPath(venue_id)
+                        .build();
+            }
+
             public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                     .appendPath(PATH_VENUE_DETAILS)
                     .build();
