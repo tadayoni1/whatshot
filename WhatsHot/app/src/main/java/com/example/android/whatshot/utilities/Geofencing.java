@@ -84,6 +84,7 @@ public class Geofencing implements ResultCallback<Status> {
                     getGeofencingRequest(),
                     getGeofencePendingIntent()
             ).setResultCallback(this);
+            Log.e(TAG, "Suceessfully registered geofence : %s");
         }catch (SecurityException securityException){
             // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
             Log.e(TAG, securityException.getMessage());
@@ -99,6 +100,7 @@ public class Geofencing implements ResultCallback<Status> {
             LocationServices.GeofencingApi.removeGeofences(mGoogleApiClient,
                     getGeofencePendingIntent()
             ).setResultCallback(this);
+            Log.e(TAG, "Suceessfully unregistered geofence : %s");
         }catch (SecurityException securityException){
             // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
             Log.e(TAG, securityException.getMessage());

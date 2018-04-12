@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient mClient;
     private Geofencing mGeofencing;
 
-    private Boolean mLeftGeofence;
+    //TODO mLeftGeofence to be false when real data API calls are made, but for now FakeDataUtils in use
+    private Boolean mLeftGeofence = true;
 
     private Spinner venueTypeSpinner;
 
@@ -153,13 +154,13 @@ public class MainActivity extends AppCompatActivity
                                 mGeofencing = new Geofencing(getApplicationContext(), mClient, location);
                                 mGeofencing.updateGeofence();
                                 mGeofencing.registerGeofence();
+                                mLeftGeofence = false;
                             }
                         }
                     });
 
         }
 
-        mLeftGeofence = false;
     }
 
     @Override
@@ -220,11 +221,8 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public Cursor loadInBackground() {
-                        /* Extract the search query from the args using our constant */
-                        // TODO: Implement to load data from API when data is not current
-                        Boolean isDataCurrent = false;
-//                        if (mLeftGeofence) {
-                        if(!isDataCurrent) {
+
+                        if(mLeftGeofence) {
                             readJsonFromApi(args);
                         }
 
@@ -426,9 +424,11 @@ public class MainActivity extends AppCompatActivity
     public void onConnected(@Nullable Bundle bundle) {
 
         if (mLeftGeofence) {
-            //TODO: Refresh API call
-            mGeofencing.updateGeofence();
-            mGeofencing.registerGeofence();
+            if (null != mGeofencing) {
+                mGeofencing.updateGeofence();
+                mGeofencing.registerGeofence();
+                mLeftGeofence = false;
+            }
         }
         Log.i(TAG, "API Client Connection Successful!");
     }
@@ -504,7 +504,9 @@ public class MainActivity extends AppCompatActivity
 
             } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
                 mLeftGeofence = true;
-                mGeofencing.unRegisterGeofence();
+                if (null != mGeofencing) {
+                    mGeofencing.unRegisterGeofence();
+                }
             } else {
                 // Log the error.
                 Log.e(TAG, String.format("Unknown transition : %d", geofenceTransition));
