@@ -215,4 +215,13 @@
     <string name="title_activity_detail">Details</string>
     <string name="no_phone_number">Not Entered</string>
     <string name="default_radius">0.5</string>
+
+    <!--Days of the week-->
+    <string name="monday_tv">Mon</string>
+    <string name="tuesday_tv">Tue</string>
+    <string name="wednesday_tv">Wed</string>
+    <string name="thursday_tv">Thu</string>
+    <string name="friday_tv">Fri</string>
+    <string name="saturday_tv">Sat</string>
+    <string name="sunday_tv">Sun</string>
 </resources>
