@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- values for the radius in imperial -->
+    <integer name="pref_radius_imperial_small">5</integer>
+    <integer name="pref_radius_imperial_medium">10</integer>
+    <integer name="pref_radius_imperial_large">20</integer>
+
+    <!-- values for the radius in metric -->
+    <integer name="pref_radius_metric_small">10</integer>
+    <integer name="pref_radius_metric_medium">20</integer>
+    <integer name="pref_radius_metric_large">30</integer>
+</resources>

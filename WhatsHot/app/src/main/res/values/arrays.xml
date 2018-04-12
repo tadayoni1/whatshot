@@ -6,4 +6,41 @@
         <item>@string/pref_theme_incandescent</item>
     </string-array> -->
 
+    <!-- RADIUS -->
+    <!-- imperial -->
+    <string-array name="pref_radius_options_imperial">
+        <item>@string/pref_radius_imperial_small</item>
+        <item>@string/pref_radius_imperial_medium</item>
+        <item>@string/pref_radius_imperial_large</item>
+    </string-array>
+
+    <string-array name="pref_radius_options_values_imperial">
+        <item>@integer/pref_radius_imperial_small</item>
+        <item>@integer/pref_radius_imperial_medium</item>
+        <item>@integer/pref_radius_imperial_large</item>
+    </string-array>
+
+    <!-- metric -->
+    <string-array name="pref_radius_options_metric">
+        <item>@string/pref_radius_metric_small</item>
+        <item>@string/pref_radius_metric_medium</item>
+        <item>@string/pref_radius_metric_large</item>
+    </string-array>
+
+    <string-array name="pref_radius_options_values_metric">
+        <item>@integer/pref_radius_metric_small</item>
+        <item>@integer/pref_radius_metric_medium</item>
+        <item>@integer/pref_radius_metric_large</item>
+    </string-array>
+    
+    <!-- Choose units -->
+    <string-array name="pref_units_options">
+        <item>@string/pref_units_label_metric</item>
+        <item>@string/pref_units_label_imperial</item>
+    </string-array>
+
+    <string-array name="pref_units_values">
+        <item>@string/pref_units_metric</item>
+        <item>@string/pref_units_imperial</item>
+    </string-array>
 </resources>

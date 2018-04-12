@@ -1,4 +1,5 @@
 <resources>
+    <!-- BEGIN What's Hot Strings -->
     <string name="app_name">WhatsHot</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -8,13 +9,139 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
+    <!-- place strings -->
+    <string name="place_generic">Place</string>
+   <string name="place_accounting">Accounting</string>
+   <string name="place_airport">Airport</string>
+   <string name="place_amusement_park">Amusement Park</string>
+   <string name="place_aquarium">Aquarium</string>
+   <string name="place_art_gallery">Art Gallery</string>
+   <string name="place_atm">ATM</string>
+   <string name="place_bakery">Bakery</string>
+   <string name="place_bank">Bank</string>
+   <string name="place_bar">Bar</string>
+   <string name="place_beauty_salon">Beauty Salon</string>
+   <string name="place_bicycle_store">Bicycle Store</string>
+   <string name="place_book_store">Bookstore</string>
+   <string name="place_bowling_alley">Bowling Alley</string>
+   <string name="place_bus_station">Bus Station</string>
+   <string name="place_cafe">Cafe</string>
+   <string name="place_campground">Campground</string>
+   <string name="place_car_dealer">Car Dealer</string>
+   <string name="place_car_rental">Car Rental</string>
+   <string name="place_car_repair">Car Repair</string>
+   <string name="place_car_wash">Car Wash</string>
+   <string name="place_casino">Casino</string>
+   <string name="place_cemetery">Cemetary</string>
+   <string name="place_church">Church</string>
+   <string name="place_city_hall">City Hall</string>
+   <string name="place_clothing_store">Clothing Store</string>
+   <string name="place_convenience_store">Convenience Store</string>
+   <string name="place_courthouse">Courthouse</string>
+   <string name="place_dentist">Dentist</string>
+   <string name="place_department_store">Department Store</string>
+   <string name="place_doctor">Doctor</string>
+   <string name="place_electrician">Electrician</string>
+   <string name="place_electronics_store">Electronics Store</string>
+   <string name="place_embassy">Embassy</string>
+   <string name="place_fire_station">Fire Station</string>
+   <string name="place_florist">Florist</string>
+   <string name="place_funeral_home">Funeral Home</string>
+   <string name="place_furniture_store">Furniture Store</string>
+   <string name="place_gas_station">Gas Station</string>
+   <string name="place_gym">Gym</string>
+   <string name="place_hair_care">Hair Care</string>
+   <string name="place_hardware_store">Hardware Store</string>
+   <string name="place_hindu_temple">Hindu Temple</string>
+   <string name="place_home_goods_store">Home Goods Store</string>
+   <string name="place_hospital">Hospital</string>
+   <string name="place_insurance_agency">Insurance Agency</string>
+   <string name="place_jewelry_store">Jewelry Store</string>
+   <string name="place_laundry">Laundry</string>
+   <string name="place_lawyer">Lawyer</string>
+   <string name="place_library">Library</string>
+   <string name="place_liquor_store">Liquor Store</string>
+   <string name="place_local_government_office">Government Office</string>
+   <string name="place_locksmith">Locksmith</string>
+   <string name="place_lodging">Lodging</string>
+   <string name="place_meal_delivery">Meal Delivery</string>
+   <string name="place_meal_takeaway">Meal Takeout</string>
+   <string name="place_mosque">Mosque</string>
+   <string name="place_movie_rental">Movie Rental</string>
+   <string name="place_movie_theater">Movie Theater</string>
+   <string name="place_moving_company">Moving Company</string>
+   <string name="place_museum">Museum</string>
+   <string name="place_night_club">Night Club</string>
+   <string name="place_painter">Painter</string>
+   <string name="place_park">Park</string>
+   <string name="place_parking">Parking</string>
+   <string name="place_pet_store">Pet Store</string>
+   <string name="place_pharmacy">Pharmacy</string>
+   <string name="place_physiotherapist">Physiotherapist</string>
+   <string name="place_plumber">Plumber</string>
+   <string name="place_police">Police</string>
+   <string name="place_post_office">Post Office</string>
+   <string name="place_real_estate_agency">Real Estate</string>
+   <string name="place_restaurant">Restaurant</string>
+   <string name="place_roofing_contractor">Roofing</string>
+   <string name="place_rv_park">RV Park</string>
+   <string name="place_school">School</string>
+   <string name="place_shoe_store">Shoe Store</string>
+   <string name="place_shopping_mall">Shopping Mall</string>
+   <string name="place_spa">Spa</string>
+   <string name="place_stadium">Stadium</string>
+   <string name="place_storage">Storage</string>
+   <string name="place_store">Store</string>
+   <string name="place_subway_station">Subway Station</string>
+   <string name="place_supermarket">Supermarket</string>
+   <string name="place_synagogue">Synagogue</string>
+   <string name="place_taxi_stand">Taxi Stand</string>
+   <string name="place_train_station">Train Station</string>
+   <string name="place_transit_station">Transit Station</string>
+   <string name="place_travel_agency">Travel Agency</string>
+   <string name="place_veterinary_care">Veterinary Care</string>
+   <string name="place_zoo">Zoo</string>
+
+    <!-- Strings related to Settings
+        What's Hot settings
+    -->
 
     <!-- What's hot settings -->
     <string name="pref_radius_list_title">Search Radius</string>
     <string name="pref_radius_list_key" translatable="false">pref-radius</string>
 
+    <!-- radius options imperial  -->
+    <string name="pref_radius_imperial_small">5 miles</string>
+    <string name="pref_radius_imperial_medium">10 miles</string>
+    <string name="pref_radius_imperial_large">20 miles</string>
 
+    <!-- radius options metric  -->
+    <string name="pref_radius_metric_small">10 km</string>
+    <string name="pref_radius_metric_medium">20 km</string>
+    <string name="pref_radius_metric_large">30 km</string>
+
+
+    <!-- English or metric settings -->
+    <string name="pref_units_list_title">Units</string>
+    <string name="pref_units_list_key" translatable="false">pref-units</string>
+
+
+    <!-- Label for metric option in unit preference -->
+    <string name="pref_units_label_metric">Metric</string>
+
+    <!-- Label for imperial option in unit preference -->
+    <string name="pref_units_label_imperial">Imperial</string>
+
+    <!-- Value in SharedPreferences for metric unit option -->
+    <string name="pref_units_metric" translatable="false">metric</string>
+
+    <!-- Value in SharedPreferences for imperial unit option -->
+    <string name="pref_units_imperial" translatable="false">imperial</string>
+
+
+    <!-- END What's Hot settings -->
+
+    <!-- END What's Hot strings -->
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>

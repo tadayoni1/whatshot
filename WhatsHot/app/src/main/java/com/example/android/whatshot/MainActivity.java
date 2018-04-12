@@ -35,16 +35,19 @@ import android.widget.Toast;
 
 import com.example.android.whatshot.data.PlaceTypes;
 import com.example.android.whatshot.data.PopularTimesContract;
+import com.example.android.whatshot.utilities.FakeDataUtils;
 import com.example.android.whatshot.utilities.Geofencing;
 import com.example.android.whatshot.utilities.LocationUtils;
 import com.example.android.whatshot.utilities.NetworkUtils;
 import com.example.android.whatshot.utilities.WhatsHotJsonUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity
         PopularTimesAdapter.PopularTimesAdapterOnClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private FusedLocationProviderClient mFusedLocationClient;
 
     private PopularTimesAdapter mPopularTimesAdapter;
     private RecyclerView mRecyclerView;
@@ -77,7 +81,6 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleApiClient mClient;
     private Geofencing mGeofencing;
-    private Location location;
 
     private Boolean mLeftGeofence;
 
@@ -121,10 +124,6 @@ public class MainActivity extends AppCompatActivity
 
         showLoading();
 
-        /*
-         * Initialize the loader
-         */
-
 
         if (ActivityCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -139,10 +138,21 @@ public class MainActivity extends AppCompatActivity
                     .enableAutoManage(this, this)
                     .build();
             mClient.connect();
-            location = LocationServices.FusedLocationApi.getLastLocation(mClient);
-            mGeofencing = new Geofencing(this, mClient, location);
-            mGeofencing.updateGeofence();
-            mGeofencing.registerGeofence();
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                mGeofencing = new Geofencing(getApplicationContext(), mClient, location);
+                                mGeofencing.updateGeofence();
+                                mGeofencing.registerGeofence();
+                            }
+                        }
+                    });
+
         }
 
         mLeftGeofence = false;
@@ -160,10 +170,19 @@ public class MainActivity extends AppCompatActivity
                     .enableAutoManage(this, this)
                     .build();
             mClient.connect();
-            location = LocationServices.FusedLocationApi.getLastLocation(mClient);
-            mGeofencing = new Geofencing(this, mClient, location);
-            mGeofencing.updateGeofence();
-            mGeofencing.registerGeofence();
+
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                mGeofencing = new Geofencing(getApplicationContext(), mClient, location);
+                                mGeofencing.updateGeofence();
+                                mGeofencing.registerGeofence();
+                            }
+                        }
+                    });
         } else {
             Toast.makeText(getApplicationContext(), "Your location is required for app to function", Toast.LENGTH_LONG).show();
             return;
@@ -262,9 +281,9 @@ public class MainActivity extends AppCompatActivity
             URL populartimesUrl = new URL(searchQueryUrlString);
             Log.d(getClass().toString(), "populartimesUrl in Loader: " + populartimesUrl);
 
-            String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
+//            String populartimesSearchResults = NetworkUtils.getResponseFromHttpUrl(populartimesUrl);
 
-//            String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
+            String populartimesSearchResults = FakeDataUtils.samplePopulartimesJson;
             Log.d(getClass().toString(), "populartimesSearchResults in Loader: " + populartimesSearchResults);
 //                    return WhatsHotJsonUtils.sortByDayAndHour(populartimesSearchResults, 0, 0);
             ContentValues[] contentValues = WhatsHotJsonUtils.getVenueContentValuesFromJsonString(populartimesSearchResults, this);
@@ -424,17 +443,26 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Double lat = 37.561717;
-        Double lng = -122.280900;
+        final Double[] lat = {37.561717};
+        final Double[] lng = {-122.280900};
 
-        try {
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                lat[0] = location.getLatitude();
+                                lng[0] = location.getLongitude();
+                            }
+                        }
+                    });
+
         }
 
-        LatLng[] latLngBoundary = LocationUtils.getRectangleBoundary(new LatLng(lat, lng), Double.parseDouble(getString(R.string.default_radius)));
+        LatLng[] latLngBoundary = LocationUtils.getRectangleBoundary(new LatLng(lat[0], lng[0]), Double.parseDouble(getString(R.string.default_radius)));
 
         makePopularTimesSearchQuery(0, 12, latLngBoundary[0], latLngBoundary[1], venueTypeSpinner.getSelectedItem().toString());
 
@@ -467,14 +495,14 @@ public class MainActivity extends AppCompatActivity
             int geofenceTransition = geofencingEvent.getGeofenceTransition();
             // Check which transition type has triggered this event
             if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
-                //TODO what to do when reentring geofence?
+
             } else if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
                 mLeftGeofence = true;
                 mGeofencing.unRegisterGeofence();
             } else {
                 // Log the error.
                 Log.e(TAG, String.format("Unknown transition : %d", geofenceTransition));
-                // No need to do anything else
+
                 return;
             }
 
